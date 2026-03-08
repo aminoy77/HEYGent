@@ -23,7 +23,7 @@ You just describe what you want. HEYgent writes the code, runs it, fixes errors,
 
 ## Requirements
 
-- macOS (Apple Silicon or Intel)
+- macOS (Apple Silicon)
 - [Node.js](https://nodejs.org) v18 or higher
 - An API key from one of:
   - **[Ollama](https://ollama.com/settings/api-keys)** (MiniMax M2.5 — primary)
