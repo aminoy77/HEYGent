@@ -1,70 +1,153 @@
 # ⚡ HEYgent
 
-An AI coding tool with smart model routing, real browser control, and a sandboxed workspace.
+**Your local AI software engineer.** HEYgent builds, runs, and debugs code for you — no terminal knowledge required.
 
-## Models Used (all free)
+![HEYgent](frontend/public/icon.png)
 
-| Task | Model |
-|------|-------|
-| 💻 Coding | Qwen 3 Coder 480B |
-| 🧠 Reasoning/Math | DeepSeek R1 |
-| 💬 General Chat | Llama 3.3 70B |
-| 📄 Long Documents | Gemini 2.0 Flash |
-| ✍️ Creative Writing | Trinity Large |
-| ⚡ Quick Tasks | Step 3.5 Flash |
+---
+
+## What it does
+
+HEYgent is a desktop app powered by AI that can:
+
+- 📁 **Create and edit files** in a sandboxed workspace
+- 🔧 **Run code** — Python, Node.js, bash, anything
+- 🌐 **Preview web apps** live inside the app
+- 💻 **Multiple terminals** — run frontend and backend simultaneously
+- 🔍 **Browse the web** to research and solve problems
+- 🗂️ **View your files** — click any file in the sidebar to read and copy the code
+
+You just describe what you want. HEYgent writes the code, runs it, fixes errors, and shows you the result.
+
+---
 
 ## Requirements
 
-- Node.js 18+
-- macOS (tested on M1)
-- OpenRouter API key (free at [openrouter.ai](https://openrouter.ai))
+- macOS (Apple Silicon or Intel)
+- [Node.js](https://nodejs.org) v18 or higher
+- An API key from one of:
+  - **[Ollama](https://ollama.com/settings/api-keys)** (MiniMax M2.5 — primary)
+  - **[OpenRouter](https://openrouter.ai/keys)** (Trinity Large — free fallback)
+
+---
 
 ## Installation
 
+### Option 1 — Download the app (easiest)
+
+1. Go to [Releases](../../releases) and download the latest `.zip`
+2. Unzip and open `HEYgent.app`
+3. On first launch, enter your API key
+
+### Option 2 — Run from source
+
 ```bash
-# 1. Install backend deps
-cd backend && npm install
+# Clone the repo
+git clone https://github.com/TU_USUARIO_GITHUB/HEYgent.git
+cd HEYgent
 
-# 2. Install Playwright browsers
-npx playwright install chromium
-# Optional: also install Chrome channel support
-npx playwright install chrome
+# Install backend dependencies
+cd backend && npm install && cd ..
 
-# 3. Install frontend deps
-cd ../frontend && npm install
+# Install frontend dependencies and build
+cd frontend && npm install && npm run build && cd ..
 
-# 4. Set your API key
-cd ..
+# Add your API keys
 cp .env.example .env
-# Edit .env and add your OPENROUTER_API_KEY
+# Edit .env and add your keys
+
+# Start the app
+cd backend && node server.js
+# In another terminal:
+cd frontend && npm run dev
+# Open http://localhost:5173
 ```
 
-## Running
+### Option 3 — Build the .app yourself
 
-Open two terminals:
-
-**Terminal 1 — Backend:**
 ```bash
-cd backend
-node --env-file=../.env server.js
+git clone https://github.com/TU_USUARIO_GITHUB/HEYgent.git
+cd HEYgent
+
+cd backend && npm install && cd ..
+cd frontend && npm install && npm run build && cd ..
+
+npm install
+npx electron-forge make
+
+# App will be in out/HEYgent-darwin-arm64/HEYgent.app
 ```
 
-**Terminal 2 — Frontend (dev mode):**
-```bash
-cd frontend
-npm run dev
+---
+
+## Setup
+
+1. Open HEYgent
+2. On first launch you'll see the **welcome screen** — paste your API key
+3. Start chatting — describe what you want to build
+
+**Where to get API keys:**
+- Ollama (MiniMax): [ollama.com/settings/api-keys](https://ollama.com/settings/api-keys)
+- OpenRouter (free): [openrouter.ai/keys](https://openrouter.ai/keys) — enable "Allow free models" in privacy settings
+
+---
+
+## Usage examples
+
+> *"Build a to-do app with a clean UI and run it on localhost"*
+
+> *"Create a Python script that downloads YouTube thumbnails and save it to workspace"*
+
+> *"Look at my calculator.py and add keyboard support"*
+
+> *"Build a REST API in Node.js with endpoints for users and products"*
+
+---
+
+## How it works
+
+```
+You → Chat → AI Agent → Tools → Workspace
+                  ↓
+          write_file / run_command / browser_search
+                  ↓
+          Results stream back to chat
 ```
 
-Then open: http://localhost:5173
+HEYgent runs a local Node.js backend that connects to cloud AI models. All files are sandboxed to the `workspace/` folder. Nothing leaves your machine except API calls.
 
-## Workspace
+---
 
-All files the AI creates are sandboxed inside the `workspace/` folder.
-The AI cannot access files outside this directory.
+## Project structure
 
-## Security Notes
+```
+HEYgent/
+├── backend/
+│   ├── server.js          # Express + WebSocket server
+│   ├── agent.js           # AI agent loop
+│   └── tools/
+│       ├── filesystem.js  # Sandboxed file operations
+│       ├── terminal.js    # Multi-session terminal
+│       └── browser.js     # Playwright browser control
+├── frontend/
+│   └── src/
+│       ├── App.jsx
+│       └── components/
+│           ├── ChatPanel.jsx
+│           ├── Sidebar.jsx
+│           ├── SidePanel.jsx   # Terminals + Preview
+│           └── Onboarding.jsx
+├── workspace/             # AI sandbox (your files live here)
+├── main.js                # Electron entry point
+└── forge.config.js        # Electron Forge config
+```
 
-- File operations are sandboxed to `workspace/`
-- Dangerous commands (`rm -rf /`, etc.) are blocked
-- API key is stored in memory only (not persisted to disk from UI)
-- Browser uses a persistent profile in `~/.heygent/browser-data`
+---
+
+## License
+
+MIT — free to use, modify, and distribute.
+
+---
+
+Built with ❤️ using MiniMax M2.5 · OpenRouter · Electron · React · Node.js
